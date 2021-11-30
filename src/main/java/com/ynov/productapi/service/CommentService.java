@@ -1,27 +1,21 @@
 package com.ynov.productapi.service;
 
+import java.util.Optional;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.ynov.productapi.model.Comment;
-import com.ynov.productapi.model.Product;
+import com.ynov.productapi.repository.CommentRepository;
 
 @Service
 public class CommentService {
-
+	
 	@Autowired
-	private ProductService productService;
+	private CommentRepository commentRepository;
 	
-	public Product addComment(Integer id, Comment comment) {
-		Product existingProduct = productService.getProduct(id).get();
-
-		existingProduct.getComments().add(comment);
-
-		return productService.upsert(existingProduct);
-	}
-	
-	public void deleteComment(Integer id) {
-		
+	public Optional<Comment> getComment(Integer id_comment) {
+		return commentRepository.findById(id_comment);
 	}
 	
 	

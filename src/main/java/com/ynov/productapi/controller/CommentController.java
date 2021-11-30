@@ -23,16 +23,21 @@ public class CommentController {
 
 	@PostMapping("/comment/{id}")
 	public Product addComment(@PathVariable("id") Integer id, @RequestBody Comment comment) {
-
-		//Product existingProduct = productService.getProduct(id).get();
-		//existingProduct.getComments().add(comment);
-		//return productService.upsert(existingProduct);
-		return commentService.addComment(id, comment);
+		Product existingProduct = productService.getProduct(id).get();
+		existingProduct.getComments().add(comment);
+		
+		return productService.upsert(existingProduct);
 	}
 	
-	@DeleteMapping("/comment/{id}")
-	public void deleteComment(@PathVariable("id") Integer id) {
-		commentService.deleteComment(id);
+	@DeleteMapping("/comment/{id_comment}/product/{id_product}")
+	public void deleteComment(@PathVariable("id_comment") Integer id_comment, @PathVariable("id_product") Integer id_product) {
+		
+		Comment c = commentService.getComment(id_comment).get();
+		Product p = productService.getProduct(id_product).get();
+		
+		p.getComments().remove(c);
+		
+		p = productService.upsert(p);
 	}
 
 }
