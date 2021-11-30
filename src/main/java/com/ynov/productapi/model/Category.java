@@ -15,6 +15,8 @@ import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.Table;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 @Entity
 @Table(name = "categories")
 public class Category {
@@ -25,7 +27,7 @@ public class Category {
 	private Integer categoryId;
 	private String name;
 
-//	@JsonIgnore // fix la récupération cyclique des éléments 
+	@JsonIgnore // fix la récupération cyclique des éléments 
 	@ManyToMany(fetch = FetchType.LAZY, // performance
 			cascade = { CascadeType.PERSIST, // création
 					CascadeType.MERGE }) // modification
