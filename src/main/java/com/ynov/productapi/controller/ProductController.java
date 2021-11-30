@@ -1,5 +1,6 @@
 package com.ynov.productapi.controller;
 
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,6 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.ynov.productapi.model.Product;
 import com.ynov.productapi.service.ProductService;
+import com.ynov.productapi.transformer.product.ProductFull;
 
 @RestController
 public class ProductController {
@@ -24,18 +26,16 @@ public class ProductController {
 	private ProductService productService;
 
 	@GetMapping("/product")
-	public Iterable<Product> getProducts() {
+	public List<ProductFull> getProducts() {
 		return productService.getProducts();
 	}
 
 	@GetMapping("/product/{id}")
 	public ResponseEntity<Product> getProduct(@PathVariable("id") Integer id) {
 		Optional<Product> p = productService.getProduct(id);
-
 		if (p.isPresent()) {
 			return new ResponseEntity<Product>(p.get(), HttpStatus.OK);
 		}
-
 		return new ResponseEntity<Product>(HttpStatus.NOT_FOUND);
 	}
 
@@ -56,21 +56,17 @@ public class ProductController {
 
 	@PatchMapping("/product")
 	public ResponseEntity<Product> partialReplaceProduct(@RequestBody Product product) {
-
 		Optional<Product> p = productService.getProduct(product.getId());
-
 		if (p.isPresent()) {
 			Product existingProduct = p.get();
 
 			if (product.getName() != null && !product.getName().equals(existingProduct.getName())) {
 				existingProduct.setName(product.getName());
 			}
-
 			if (product.getDescription() != null
 					&& !product.getDescription().equals(existingProduct.getDescription())) {
 				existingProduct.setDescription(product.getDescription());
 			}
-
 			if (product.getCost() != null && !product.getCost().equals(existingProduct.getCost())) {
 				existingProduct.setCost(product.getCost());
 			}
@@ -81,7 +77,8 @@ public class ProductController {
 	}
 
 	@GetMapping("/product/filter/{name}")
-	public Iterable<Product> getProductByName(@PathVariable("name") String name) {
+	public Iterable<Product> getProductsByName(@PathVariable("name") String name) {
 		return productService.getProductsByName(name);
 	}
+
 }
